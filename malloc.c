@@ -47,6 +47,11 @@ void *my_malloc(size_t size) {
       if (p == NULL) return;
       struct block_header *header = (struct block_header *)p - 1;
       header->is_free = 1;
+
+      if (header->next != NULL && header->next->is_free){
+        header->size +=sizeof(struct block_header) + header->next->size;
+        header->next = header->next->next;
+      }
     }
       
   
