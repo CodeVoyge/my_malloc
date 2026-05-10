@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+#define FIRST_FIT 0
+#define BEST_FIT 1
+
+int placement_policy = BEST_FIT;
+
 struct block_header {
     size_t size;
     int is_free;
@@ -14,12 +20,25 @@ struct block_header *free_list = NULL;
 void *my_malloc(size_t size) {
 
   struct block_header *current = free_list;
+  struct block_header *best = NULL;
+
   while(current != NULL){
     if(current->is_free && current->size >= size){
+      if(placement_policy == FIRST_FIT){
       current->is_free = 0;
       return (void *)(current + 1);
+    } else {
+      if (best == NULL || current->size < best->size){
+        best = current;
+      }
     }
+  } 
     current = current->next;
+  }
+
+  if(best != NULL){
+    best->is_free = 0;
+    return (void *) (best + 1);
   }
       size_t total = sizeof(struct block_header) + size;
       void *block = sbrk(total);
