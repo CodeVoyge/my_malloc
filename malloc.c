@@ -51,10 +51,18 @@ void *my_malloc(size_t size) {
       
   
     int main() {
-      int *p = (int *)my_malloc(sizeof(int));
-      *p = 42;
-       printf("value:  %d\n", *p);
-       my_free(p);
-       printf("freed!\n");
-      return 0;
+      int *p1 = (int *)my_malloc(sizeof(int));
+      *p1 = 42;
+       printf("p1 value:  %d\n", *p1);
+       printf("p1 address: %p\n", p1);
+
+       my_free(p1);
+       printf("freed p1!\n");
+       
+       int *p2 = (int *)my_malloc(sizeof(int));
+       *p2 = 99;
+       printf("p2 value: %d\n", *p2);
+       printf("p2 address: %p\n" , p2);
+
+       return 0;
     }
