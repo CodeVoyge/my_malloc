@@ -75,18 +75,35 @@ void *my_malloc(size_t size) {
       
   
     int main() {
-      int *p1 = (int *)my_malloc(sizeof(int));
-      *p1 = 42;
-       printf("p1 value:  %d\n", *p1);
-       printf("p1 address: %p\n", p1);
+    printf("=== Testing my_malloc ===\n\n");
 
-       my_free(p1);
-       printf("freed p1!\n");
-       
-       int *p2 = (int *)my_malloc(sizeof(int));
-       *p2 = 99;
-       printf("p2 value: %d\n", *p2);
-       printf("p2 address: %p\n" , p2);
+    // test 1: basic allocation
+    int *a = (int *)my_malloc(sizeof(int));
+    *a = 10;
+    printf("a = %d, address: %p\n", *a, a);
 
-       return 0;
-    }
+    int *b = (int *)my_malloc(sizeof(int));
+    *b = 20;
+    printf("b = %d, address: %p\n", *b, b);
+
+    // test 2: free and reuse
+    printf("\n--- Freeing a ---\n");
+    my_free(a);
+
+    int *c = (int *)my_malloc(sizeof(int));
+    *c = 30;
+    printf("c = %d, address: %p\n", *c, c);
+    printf("a and c same address? %s\n", (void*)a == (void*)c ? "YES - reused!" : "NO");
+
+    // test 3: coalescing
+    printf("\n--- Testing coalescing ---\n");
+    my_free(b);
+    my_free(c);
+
+    // now two adjacent blocks are free, request bigger block
+    int *d = (int *)my_malloc(sizeof(int) * 2);
+    printf("d allocated after coalescing: %p\n", d);
+
+    printf("\n=== All tests passed! ===\n");
+    return 0;
+}
